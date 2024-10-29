@@ -9,7 +9,7 @@ def extract_xdrz(file, extract_to):
     with zipfile.ZipFile(file, 'r') as zip_ref:
         zip_ref.extractall(extract_to)
 
-# Function to search keyword and permissions in XDOZ and SEC files within XDOZ folders
+# Adjusted Function to search keyword and permissions in XDOZ and SEC files within XDOZ folders
 def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
         report.write("File Path, RoleDisplayName, Path, Permissions\n")
@@ -32,14 +32,22 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
                                         policies = re.findall(r'<policy.*?roleDisplayName="(.*?)".*?>(.*?)</policy>', content, re.IGNORECASE | re.DOTALL)
                                         for role_display_name, policy_content in policies:
                                             if re.search(keyword, role_display_name, re.IGNORECASE):
-                                                permissions_matches = re.findall(r'<folderPermission>.*?<allow path="(.*?)".*?permissions="(.*?)".*?/>.*?</folderPermission>', policy_content, re.IGNORECASE | re.DOTALL)
+                                                # Adjusted to correctly capture permissions without '&#x9;' characters
+                                                permissions_matches = re.findall(
+                                                    r'<folderPermission>.*?<allow path="(.*?)".*?permissions="(.*?)".*?/>.*?</folderPermission>', 
+                                                    policy_content, re.IGNORECASE | re.DOTALL
+                                                )
                                                 for path, permissions in permissions_matches:
-                                                    permissions_clean = " | ".join([perm.split('.')[-1].capitalize() for perm in permissions.split(',&#x9;') if perm.strip()])
+                                                    # Clean up and format permissions
+                                                    permissions_clean = " | ".join(
+                                                        [perm.split('.')[-1].capitalize() for perm in re.split(r'[,\s;]+', permissions) if perm.strip()]
+                                                    )
                                                     report.write(f"{file_path}, {role_display_name}, {path}, {permissions_clean}\n")
                                                     found_any = True
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
+
 
 # Function to search keyword in XDMZ and SEC files
 def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
