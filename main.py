@@ -77,7 +77,7 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
     return output_file
 
 # Streamlit App
-st.title("Welcome to Oracle BIP Reports IntelliScan Tool by IBM")
+st.title("Oracle BIP Reports IntelliScan Tool by IBM")
 
 tab1, tab2 = st.tabs(["Extract Report's Permissions", "Keyword Finder in Data Model"])
 
