@@ -2,12 +2,18 @@ import streamlit as st
 import os
 import zipfile
 import re
+import shutil
+
+# Function to unzip .xdrz files and process internal .xdoz/.xdmz files
+def extract_xdrz(file, extract_to):
+    with zipfile.ZipFile(file, 'r') as zip_ref:
+        zip_ref.extractall(extract_to)
 
 # Function to search keyword and permissions in XDOZ and SEC files within XDOZ folders
 def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
         report.write("File Path, RoleDisplayName, Path, Permissions\n")
-        found_any = False  # Flag to check if we found any results
+        found_any = False
         for root, dirs, files in os.walk(folder):
             for file in files:
                 if file.endswith(".xdoz"):
@@ -28,9 +34,9 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
                                             if re.search(keyword, role_display_name, re.IGNORECASE):
                                                 permissions_matches = re.findall(r'<folderPermission>.*?<allow path="(.*?)".*?permissions="(.*?)".*?/>.*?</folderPermission>', policy_content, re.IGNORECASE | re.DOTALL)
                                                 for path, permissions in permissions_matches:
-                                                    permissions_clean = " | ".join([perm.split('.')[-1].capitalize() for perm in permissions.split(',;&#x9;') if perm.strip()])
+                                                    permissions_clean = " | ".join([perm.split('.')[-1].capitalize() for perm in permissions.split(',&#x9;') if perm.strip()])
                                                     report.write(f"{file_path}, {role_display_name}, {path}, {permissions_clean}\n")
-                                                    found_any = True  # Mark that we found a result
+                                                    found_any = True
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
@@ -39,7 +45,7 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
 def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
         report.write("File Path, Line Number, Line\n")
-        found_any = False  # Flag to check if we found any results
+        found_any = False
         for root, dirs, files in os.walk(folder):
             for file in files:
                 if file.endswith(".xdmz"):
@@ -57,7 +63,7 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
                                             report.write(f"{file_path}, {line_num}, {line.strip()}\n")
-                                            found_any = True  # Mark that we found a result
+                                            found_any = True
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
@@ -67,18 +73,23 @@ st.title("Welcome to Oracle BIP DeepScan")
 
 tab1, tab2 = st.tabs(["Extract Permissions", "Extract SQL Code"])
 
+# Temp directory for extracted files
+temp_dir = "temp_dir"
+os.makedirs(temp_dir, exist_ok=True)
+
 with tab1:
     st.header("Extract Permissions")
-    uploaded_files = st.file_uploader("Upload .xdoz files", type="xdoz", accept_multiple_files=True, key="permissions")
+    uploaded_files = st.file_uploader("Upload .xdrz files", type="xdrz", accept_multiple_files=True, key="permissions")
     keyword_permissions = st.text_input("Enter Keyword", key="keyword_permissions")
     if st.button("Search", key="search_permissions"):
         output_file = "keyword_search_report_permissions.csv"
         if uploaded_files and keyword_permissions:
             for uploaded_file in uploaded_files:
-                file_path = os.path.join("temp_dir", uploaded_file.name)
-                with open(file_path, "wb") as f:
+                xdrz_path = os.path.join(temp_dir, uploaded_file.name)
+                with open(xdrz_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
-                search_keyword_in_xdoz_and_sec("temp_dir", keyword_permissions, output_file)
+                extract_xdrz(xdrz_path, temp_dir)
+                search_keyword_in_xdoz_and_sec(temp_dir, keyword_permissions, output_file)
             st.success("Search completed. Download the report:")
             st.download_button(label="Download CSV", data=open(output_file, "r").read(), file_name=output_file, mime="text/csv")
         else:
@@ -86,17 +97,21 @@ with tab1:
 
 with tab2:
     st.header("Extract SQL Code")
-    uploaded_files_sql = st.file_uploader("Upload .xdmz files", type="xdmz", accept_multiple_files=True, key="sql_code")
+    uploaded_files_sql = st.file_uploader("Upload .xdrz files", type="xdrz", accept_multiple_files=True, key="sql_code")
     keyword_sql = st.text_input("Enter Keyword", key="keyword_sql")
     if st.button("Search", key="search_sql"):
         output_file = "keyword_search_report_sql.csv"
         if uploaded_files_sql and keyword_sql:
             for uploaded_file in uploaded_files_sql:
-                file_path = os.path.join("temp_dir", uploaded_file.name)
-                with open(file_path, "wb") as f:
+                xdrz_path = os.path.join(temp_dir, uploaded_file.name)
+                with open(xdrz_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
-                search_keyword_in_xdmz_and_sec("temp_dir", keyword_sql, output_file)
+                extract_xdrz(xdrz_path, temp_dir)
+                search_keyword_in_xdmz_and_sec(temp_dir, keyword_sql, output_file)
             st.success("Search completed. Download the report:")
             st.download_button(label="Download CSV", data=open(output_file, "r").read(), file_name=output_file, mime="text/csv")
         else:
             st.error("Please upload files and provide the keyword.")
+
+# Clean up temp directory after the search
+shutil.rmtree(temp_dir, ignore_errors=True)
