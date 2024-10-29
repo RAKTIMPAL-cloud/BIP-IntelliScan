@@ -104,7 +104,7 @@ with tab1:
             st.error("Please upload files and provide the keyword.")
 
 with tab2:
-    st.header("Extract SQL Code")
+    st.header("Keyword Finder")
     uploaded_files_sql = st.file_uploader("Upload .xdrz files", type="xdrz", accept_multiple_files=True, key="sql_code")
     keyword_sql = st.text_input("Enter Keyword", key="keyword_sql")
     if st.button("Search", key="search_sql"):
