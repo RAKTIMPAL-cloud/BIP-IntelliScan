@@ -69,16 +69,16 @@ tab1, tab2 = st.tabs(["Extract Permissions", "Extract SQL Code"])
 
 with tab1:
     st.header("Extract Permissions")
-    uploaded_files = st.file_uploader("Upload .xdoz files", type="xdoz", accept_multiple_files=True)
-    keyword = st.text_input("Enter Keyword")
-    if st.button("Search"):
+    uploaded_files = st.file_uploader("Upload .xdoz files", type="xdoz", accept_multiple_files=True, key="permissions")
+    keyword_permissions = st.text_input("Enter Keyword", key="keyword_permissions")
+    if st.button("Search", key="search_permissions"):
         output_file = "keyword_search_report_permissions.csv"
-        if uploaded_files and keyword:
+        if uploaded_files and keyword_permissions:
             for uploaded_file in uploaded_files:
                 file_path = os.path.join("temp_dir", uploaded_file.name)
                 with open(file_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
-                search_keyword_in_xdoz_and_sec("temp_dir", keyword, output_file)
+                search_keyword_in_xdoz_and_sec("temp_dir", keyword_permissions, output_file)
             st.success("Search completed. Download the report:")
             st.download_button(label="Download CSV", data=open(output_file, "r").read(), file_name=output_file, mime="text/csv")
         else:
@@ -86,16 +86,16 @@ with tab1:
 
 with tab2:
     st.header("Extract SQL Code")
-    uploaded_files = st.file_uploader("Upload .xdmz files", type="xdmz", accept_multiple_files=True)
-    keyword = st.text_input("Enter Keyword")
-    if st.button("Search"):
+    uploaded_files_sql = st.file_uploader("Upload .xdmz files", type="xdmz", accept_multiple_files=True, key="sql_code")
+    keyword_sql = st.text_input("Enter Keyword", key="keyword_sql")
+    if st.button("Search", key="search_sql"):
         output_file = "keyword_search_report_sql.csv"
-        if uploaded_files and keyword:
-            for uploaded_file in uploaded_files:
+        if uploaded_files_sql and keyword_sql:
+            for uploaded_file in uploaded_files_sql:
                 file_path = os.path.join("temp_dir", uploaded_file.name)
                 with open(file_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
-                search_keyword_in_xdmz_and_sec("temp_dir", keyword, output_file)
+                search_keyword_in_xdmz_and_sec("temp_dir", keyword_sql, output_file)
             st.success("Search completed. Download the report:")
             st.download_button(label="Download CSV", data=open(output_file, "r").read(), file_name=output_file, mime="text/csv")
         else:
