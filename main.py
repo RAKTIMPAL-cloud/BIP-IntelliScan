@@ -20,7 +20,7 @@ response = requests.get(img_url)
 img = Image.open(BytesIO(response.content))
 
 # Resize the image to a desired smaller size
-img = img.resize((150, 150))  # Resize image to 150x150 pixels
+img = img.resize((200, 150))  # Resize image to 150x150 pixels
 
 # Custom CSS styling
 st.markdown("""
