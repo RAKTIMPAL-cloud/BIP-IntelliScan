@@ -8,9 +8,10 @@ from PIL import Image
 # Page setup
 st.set_page_config(page_title="Oracle BIP IntelliScan Tool", page_icon="🔍")
 
-# Load and display an image
-image = Image.open('https://blog.logomaster.ai/hs-fs/hubfs/ibm-logo-2.jpg?width=672&height=448&name=ibm-logo-2.jpg')  # Replace with your image path or URL
-st.image(image, caption="Oracle BIP Reports IntelliScan Tool by IBM", use_column_width=True)
+# Display an image directly from a URL
+st.image("https://blog.logomaster.ai/hs-fs/hubfs/ibm-logo-2.jpg?width=672&height=448&name=ibm-logo-2.jpg", 
+         caption="Oracle BIP Reports IntelliScan Tool by IBM", use_column_width=True)
+
 
 # Custom CSS styling
 st.markdown("""
