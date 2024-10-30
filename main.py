@@ -60,7 +60,7 @@ st.markdown("""
 
 # Center the image and set the size above the header
 st.markdown('<div class="custom-image">', unsafe_allow_html=True)
-st.image(img, width=200)  # Adjust width for better visibility
+st.image(img, width=100)  # Adjust width for better visibility
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Title and tabs
