@@ -19,6 +19,8 @@ img_url = "https://img.freepik.com/free-vector/cute-bot-say-users-hello-chatbot-
 response = requests.get(img_url)
 img = Image.open(BytesIO(response.content))
 
+# Resize the image to a desired smaller size
+img = img.resize((150, 150))  # Resize image to 150x150 pixels
 
 # Custom CSS styling
 st.markdown("""
@@ -58,8 +60,8 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Center the image and set the size above the header
-st.image(img, width=150, height=150)  # Use use_column_width to adjust responsiveness
+# Center the image above the header
+st.image(img)  # Display the resized image
 
 # Title and tabs
 st.markdown('<div class="custom-header">Oracle BIP Reports IntelliScan Tool</div>', unsafe_allow_html=True)
