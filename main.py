@@ -3,6 +3,60 @@ import os
 import zipfile
 import re
 import shutil
+from PIL import Image
+
+# Page setup
+st.set_page_config(page_title="Oracle BIP IntelliScan Tool", page_icon="🔍")
+
+# Load and display an image
+image = Image.open('https://blog.logomaster.ai/hs-fs/hubfs/ibm-logo-2.jpg?width=672&height=448&name=ibm-logo-2.jpg')  # Replace with your image path or URL
+st.image(image, caption="Oracle BIP Reports IntelliScan Tool by IBM", use_column_width=True)
+
+# Custom CSS styling
+st.markdown("""
+    <style>
+        .stApp {
+            background-color: #9cbbf9;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        .custom-header {
+            font-size: 2.5em;
+            color: #050131;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .custom-box {
+            background-color: #050131;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+        }
+        .stButton>button {
+            background-color: #050131;
+            color: #ffffff;
+            border: none;
+            padding: 8px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .stButton>button:hover {
+            background-color: #061175;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+# Title and tabs
+st.markdown('<div class="custom-header">Oracle BIP Reports IntelliScan Tool by IBM</div>', unsafe_allow_html=True)
+tab1, tab2 = st.tabs(["Extract Report's Permissions", "Keyword Finder in Data Model"])
+
+# Temp directory for extracted files
+temp_dir = "temp_dir"
+os.makedirs(temp_dir, exist_ok=True)
 
 # Function to unzip .xdrz files and process internal .xdoz/.xdmz files
 def extract_xdrz(file, extract_to):
@@ -32,13 +86,11 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
                                         policies = re.findall(r'<policy.*?roleDisplayName="(.*?)".*?>(.*?)</policy>', content, re.IGNORECASE | re.DOTALL)
                                         for role_display_name, policy_content in policies:
                                             if re.search(keyword, role_display_name, re.IGNORECASE):
-                                                # Adjusted to correctly capture permissions without '&#x9;' characters
                                                 permissions_matches = re.findall(
                                                     r'<folderPermission>.*?<allow path="(.*?)".*?permissions="(.*?)".*?/>.*?</folderPermission>', 
                                                     policy_content, re.IGNORECASE | re.DOTALL
                                                 )
                                                 for path, permissions in permissions_matches:
-                                                    # Clean up and format permissions
                                                     permissions_clean = " | ".join(
                                                         [perm.split('.')[-1].capitalize() for perm in re.split(r'[,\s;]+', permissions) if perm.strip()]
                                                     )
@@ -75,15 +127,6 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
-
-# Streamlit App
-st.title("Oracle BIP Reports IntelliScan Tool by IBM")
-
-tab1, tab2 = st.tabs(["Extract Report's Permissions", "Keyword Finder in Data Model"])
-
-# Temp directory for extracted files
-temp_dir = "temp_dir"
-os.makedirs(temp_dir, exist_ok=True)
 
 with tab1:
     st.header("Extract Permissions")
