@@ -12,9 +12,12 @@ st.set_page_config(page_title="Oracle BIP IntelliScan Tool", page_icon="🔍")
 
 # Display a single image with fixed size
 
-# Display a single image with fixed size
+# URL of the image to be displayed
 img_url = "https://img.freepik.com/free-vector/cute-bot-say-users-hello-chatbot-greets-online-consultation_80328-195.jpg"
-img = Image.open(BytesIO(requests.get(img_url).content))
+
+# Fetch the image from the URL
+response = requests.get(img_url)
+img = Image.open(BytesIO(response.content))
 
 
 # Custom CSS styling
@@ -55,14 +58,14 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+# Center the image and set the size above the header
+st.markdown('<div class="custom-image">', unsafe_allow_html=True)
+st.image(img, width=300)  # Adjust width for better visibility
+st.markdown('</div>', unsafe_allow_html=True)
+
 # Title and tabs
 st.markdown('<div class="custom-header">Oracle BIP Reports IntelliScan Tool by IBM</div>', unsafe_allow_html=True)
 tab1, tab2 = st.tabs(["Extract Report's Permissions", "Keyword Finder in Data Model"])
-
-# Center the image and set the size
-st.markdown('<div class="custom-image">', unsafe_allow_html=True)
-st.image(img, width=250)  # Adjust width for compression
-st.markdown('</div>', unsafe_allow_html=True)
 
 # Temp directory for extracted files
 temp_dir = "temp_dir"
