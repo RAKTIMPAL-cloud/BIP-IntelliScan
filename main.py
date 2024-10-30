@@ -11,16 +11,16 @@ from io import BytesIO
 st.set_page_config(page_title="Oracle BIP IntelliScan Tool", page_icon="🔍")
 
 # Display two images side by side with fixed size
-col1, col2 = st.columns(2)
+col1 = st.columns(1)
 with col1:
     img1_url = "https://img.freepik.com/free-vector/cute-bot-say-users-hello-chatbot-greets-online-consultation_80328-195.jpg"
     img1 = Image.open(BytesIO(requests.get(img1_url).content))
     st.image(img1, width=250)
 
-with col2:
-    img2_url = "https://blog.logomaster.ai/hs-fs/hubfs/ibm-logo-2.jpg?width=672&height=448&name=ibm-logo-2.jpg"
-    img2 = Image.open(BytesIO(requests.get(img2_url).content))
-    st.image(img2, width=300)
+#with col2:
+    #img2_url = "https://blog.logomaster.ai/hs-fs/hubfs/ibm-logo-2.jpg?width=672&height=448&name=ibm-logo-2.jpg"
+    #img2 = Image.open(BytesIO(requests.get(img2_url).content))
+    #st.image(img2, width=300)
 
 # Custom CSS styling
 st.markdown("""
