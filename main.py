@@ -11,9 +11,10 @@ from io import BytesIO
 st.set_page_config(page_title="Oracle BIP IntelliScan Tool", page_icon="🔍")
 
 # Display a single image with fixed size
+
+# Display a single image with fixed size
 img_url = "https://img.freepik.com/free-vector/cute-bot-say-users-hello-chatbot-greets-online-consultation_80328-195.jpg"
 img = Image.open(BytesIO(requests.get(img_url).content))
-st.image(img, width=220)  # Set the desired width here
 
 
 # Custom CSS styling
