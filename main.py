@@ -9,15 +9,14 @@ from PIL import Image
 # Page setup
 st.set_page_config(page_title="Oracle BIP IntelliScan Tool", page_icon="🔍")
 
-# Display two images side by side
+# Display two images side by side with controlled width
 col1, col2 = st.columns(2)
 with col1:
-    st.image("https://blog.logomaster.ai/hs-fs/hubfs/ibm-logo-2.jpg?width=100&height=50&name=ibm-logo-2.jpg", 
-             caption="IBM Logo", use_column_width=True)
+    st.image("https://img.freepik.com/free-vector/cute-bot-say-users-hello-chatbot-greets-online-consultation_80328-195.jpg", 
+             caption="Chatbot Greeting", use_column_width="always")
 with col2:
-    st.image("https://img.freepik.com/free-vector/cute-bot-say-users-hello-chatbot-greets-online-consultation_80328-195.jpg?width=100&height=50&name=cute-bot-say-users-hello-chatbot-greets-online-consultation_80328-195.jpg", 
-             caption="Sample Logo 2", use_column_width=True)
-
+    st.image("https://blog.logomaster.ai/hs-fs/hubfs/ibm-logo-2.jpg?width=672&height=448&name=ibm-logo-2.jpg", 
+             caption="IBM Logo", use_column_width="always")
 
 # Custom CSS styling
 st.markdown("""
