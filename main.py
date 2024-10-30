@@ -20,7 +20,7 @@ with col1:
 with col2:
     img2_url = "https://blog.logomaster.ai/hs-fs/hubfs/ibm-logo-2.jpg?width=672&height=448&name=ibm-logo-2.jpg"
     img2 = Image.open(BytesIO(requests.get(img2_url).content))
-    st.image(img2, width=250)
+    st.image(img2, width=300)
 
 # Custom CSS styling
 st.markdown("""
