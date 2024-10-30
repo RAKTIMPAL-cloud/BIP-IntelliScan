@@ -59,7 +59,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # Center the image and set the size above the header
-st.image(img, width=150, use_column_width='auto')  # Use use_column_width to adjust responsiveness
+st.image(img, width=150, height=150)  # Use use_column_width to adjust responsiveness
 
 # Title and tabs
 st.markdown('<div class="custom-header">Oracle BIP Reports IntelliScan Tool</div>', unsafe_allow_html=True)
