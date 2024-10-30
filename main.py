@@ -60,11 +60,11 @@ st.markdown("""
 
 # Center the image and set the size above the header
 st.markdown('<div class="custom-image">', unsafe_allow_html=True)
-st.image(img, width=100)  # Adjust width for better visibility
+st.image(img, width=160)  # Adjust width for better visibility
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Title and tabs
-st.markdown('<div class="custom-header">Oracle BIP Reports IntelliScan Tool by IBM</div>', unsafe_allow_html=True)
+st.markdown('<div class="custom-header">Oracle BIP Reports IntelliScan Tool</div>', unsafe_allow_html=True)
 tab1, tab2 = st.tabs(["Extract Report's Permissions", "Keyword Finder in Data Model"])
 
 # Temp directory for extracted files
