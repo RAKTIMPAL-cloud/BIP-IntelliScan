@@ -59,6 +59,11 @@ st.markdown("""
 st.markdown('<div class="custom-header">Oracle BIP Reports IntelliScan Tool by IBM</div>', unsafe_allow_html=True)
 tab1, tab2 = st.tabs(["Extract Report's Permissions", "Keyword Finder in Data Model"])
 
+# Center the image and set the size
+st.markdown('<div class="custom-image">', unsafe_allow_html=True)
+st.image(img, width=250)  # Adjust width for compression
+st.markdown('</div>', unsafe_allow_html=True)
+
 # Temp directory for extracted files
 temp_dir = "temp_dir"
 os.makedirs(temp_dir, exist_ok=True)
