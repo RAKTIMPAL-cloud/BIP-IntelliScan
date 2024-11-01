@@ -13,7 +13,7 @@ st.set_page_config(page_title="Oracle BIP IntelliScan Tool", page_icon="🔍")
 # Display a single image with fixed size
 
 # URL of the image to be displayed
-img_url = "https://www.shutterstock.com/image-vector/3d-vector-robot-chatbot-ai-600nw-2294117979.jpg"
+img_url = "https://png.pngtree.com/png-vector/20220707/ourmid/pngtree-chatbot-robot-concept-chat-bot-png-image_5632383.png"
 
 # Fetch the image from the URL
 response = requests.get(img_url)
