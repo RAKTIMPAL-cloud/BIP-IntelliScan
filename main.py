@@ -13,7 +13,7 @@ st.set_page_config(page_title="Oracle BIP IntelliScan Tool", page_icon="🔍")
 # Display a single image with fixed size
 
 # URL of the image to be displayed
-img_url = "https://img.freepik.com/free-vector/cute-bot-say-users-hello-chatbot-greets-online-consultation_80328-195.jpg"
+img_url = "https://cdn.dribbble.com/users/37530/screenshots/2937858/drib_blink_bot.gif"
 
 # Fetch the image from the URL
 response = requests.get(img_url)
