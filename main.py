@@ -115,7 +115,8 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
             st.warning("No results found for the given keyword.")
     return output_file
 
-# Function to search keyword in XDMZ and SEC files
+
+# Adjusted Function to search keyword in XDMZ and SEC files within XDMZ folders
 def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
         report.write("File Path, Line Number, Path, Line\n")
@@ -134,7 +135,7 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
                                 file_path = os.path.join(dirpath, unzipped_file)
                                 with open(file_path, 'r', encoding='utf-8') as f:
                                     lines = f.readlines()
-                                    file_content = ''.join(lines)  # Join lines to search in the entire content
+                                    file_content = ''.join(lines)
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
                                             path_match = re.search(r'path="([^"]*)"', file_content, re.IGNORECASE)
