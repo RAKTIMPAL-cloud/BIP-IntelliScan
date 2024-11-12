@@ -118,8 +118,7 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
 # Function to search keyword in XDMZ and SEC files
 def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
-        #report.write("File Path, Line Number, Line\n")
-        report.write("Path, Line Number, Line\n")
+        report.write("File Path, Line Number, Line\n")
         found_any = False
         for root, dirs, files in os.walk(folder):
             for file in files:
