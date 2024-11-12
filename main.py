@@ -115,11 +115,10 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
             st.warning("No results found for the given keyword.")
     return output_file
 
-# Adjusted Function to search keyword in XDMZ and SEC files and extract "Path" from .sec files
+# Function to search keyword in XDMZ and SEC files
 def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
-        # Only the required columns in the header
-        report.write("Path, Line Number, Line\n")
+        report.write("File Path, Line Number, Path, Line\n")
         found_any = False
         for root, dirs, files in os.walk(folder):
             for file in files:
@@ -134,23 +133,16 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
                             if unzipped_file.endswith(".xdm") or unzipped_file.endswith(".sec"):
                                 file_path = os.path.join(dirpath, unzipped_file)
                                 with open(file_path, 'r', encoding='utf-8') as f:
-                                    content = f.read()
-                                    
-                                    # Extract all <allow> paths in .sec files
-                                    path_matches = re.findall(r'<allow path="(.*?)"', content, re.IGNORECASE)
-                                    
-                                    # Process line by line to search for the keyword
-                                    lines = content.splitlines()
+                                    lines = f.readlines()
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
-                                            # Use the first found path if available, otherwise "N/A"
-                                            path = path_matches[0] if path_matches else "N/A"
-                                            report.write(f"{path}, {line_num}, {line.strip()}\n")
+                                            path_match = re.search(r'<path>(.*?)</path>', line, re.IGNORECASE)  # Adjust as necessary to extract 'Path'
+                                            path = path_match.group(1) if path_match else "N/A"  # Default to "N/A" if no path found
+                                            report.write(f"{file_path}, {line_num}, {path}, {line.strip()}\n")
                                             found_any = True
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
-
 
 
 with tab1:
