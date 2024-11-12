@@ -134,15 +134,17 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
                                 file_path = os.path.join(dirpath, unzipped_file)
                                 with open(file_path, 'r', encoding='utf-8') as f:
                                     lines = f.readlines()
+                                    file_content = ''.join(lines)  # Join lines to search in the entire content
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
-                                            path_match = re.search(r'<path>(.*?)</path>', line, re.IGNORECASE)  # Adjust as necessary to extract 'Path'
-                                            path = path_match.group(1) if path_match else "N/A"  # Default to "N/A" if no path found
+                                            path_match = re.search(r'path="([^"]*)"', file_content, re.IGNORECASE)
+                                            path = path_match.group(1) if path_match else "N/A"
                                             report.write(f"{file_path}, {line_num}, {path}, {line.strip()}\n")
                                             found_any = True
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
+
 
 
 with tab1:
