@@ -116,10 +116,12 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
     return output_file
 
 
-# Adjusted Function to search keyword in XDMZ and SEC files within XDMZ folders
+#NEW CODE - STRT
+
+# Function to search keyword in XDMZ and SEC files within XDMZ folders
 def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
-        report.write("File Path, Line Number, Path, Line\n")
+        report.write("File Path, Path, Line Number, Line\n")
         found_any = False
         for root, dirs, files in os.walk(folder):
             for file in files:
@@ -135,18 +137,18 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
                                 file_path = os.path.join(dirpath, unzipped_file)
                                 with open(file_path, 'r', encoding='utf-8') as f:
                                     lines = f.readlines()
-                                    file_content = ''.join(lines)
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
-                                            path_match = re.search(r'path="([^"]*)"', file_content, re.IGNORECASE)
+                                            path_match = re.search(r'path="([^"]*)"', line, re.IGNORECASE)
                                             path = path_match.group(1) if path_match else "N/A"
-                                            report.write(f"{file_path}, {line_num}, {path}, {line.strip()}\n")
+                                            report.write(f"{file_path}, {path}, {line_num}, {line.strip()}\n")
                                             found_any = True
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
 
 
+#NEW CODE END
 
 with tab1:
     st.header("Extract Permissions")
