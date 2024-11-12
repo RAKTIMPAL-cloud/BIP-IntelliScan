@@ -115,9 +115,10 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
             st.warning("No results found for the given keyword.")
     return output_file
 
-# Function to search keyword in XDMZ and SEC files
+# Adjusted Function to search keyword in XDMZ and SEC files
 def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
+        # Output the required columns
         report.write("Path, Line Number, Line\n")
         found_any = False
         for root, dirs, files in os.walk(folder):
@@ -133,27 +134,22 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
                             if unzipped_file.endswith(".xdm") or unzipped_file.endswith(".sec"):
                                 file_path = os.path.join(dirpath, unzipped_file)
                                 with open(file_path, 'r', encoding='utf-8') as f:
-                                    lines = f.readlines()
-                                    for line_num, line in enumerate(lines, 1):
-                                        if re.search(keyword, line, re.IGNORECASE):
-                                                    
-                                                # Adjusted to correctly capture permissions without '&#x9;' characters
-                                                permissions_matches = re.findall(
-                                                    r'<folderPermission>.*?<allow path="(.*?)".*?permissions="(.*?)".*?/>.*?</folderPermission>',
-                                                    policy_content, re.IGNORECASE | re.DOTALL
-                                                )
-                                                for path, permissions in permissions_matches:
-                                                    # Clean up and format permissions
-                                                    permissions_clean = " | ".join(
-                                                        [perm.split('.')[-1].capitalize() for perm in re.split(r'[,\s;]+', permissions) if perm.strip() and "&#x9" not in perm]
-                                                    )
-                                                    report.write(f"{path}, {line_num}, {line.strip()}\n")
-                                                    found_any = True
-                                            
-                                                   
+                                    content = f.read()
+                                    if re.search(keyword, content, re.IGNORECASE):
+                                        # Extract the "Path" value within the allow element in .sec files
+                                        path_matches = re.findall(r'<allow path="(.*?)".*?>', content, re.IGNORECASE)
+                                        # Iterate over each line for the keyword match
+                                        lines = content.splitlines()
+                                        for line_num, line in enumerate(lines, 1):
+                                            if re.search(keyword, line, re.IGNORECASE):
+                                                # Use the extracted path if available, otherwise leave it blank
+                                                path = path_matches[0] if path_matches else "N/A"
+                                                report.write(f"{path}, {line_num}, {line.strip()}\n")
+                                                found_any = True
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
+
 
 with tab1:
     st.header("Extract Permissions")
