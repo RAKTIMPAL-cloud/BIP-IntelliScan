@@ -115,14 +115,10 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
             st.warning("No results found for the given keyword.")
     return output_file
 
-
-#NEW CODE - STRT
-
-
-# Function to search keyword in XDMZ and SEC files within XDMZ folders
+# Function to search keyword in XDMZ and SEC files
 def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
-        report.write("File Path, Path, Line Number, Line\n")
+        report.write("File Path, Line Number, Line\n")
         found_any = False
         for root, dirs, files in os.walk(folder):
             for file in files:
@@ -140,26 +136,14 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
                                     lines = f.readlines()
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
-                                            path = "N/A"
-                                            path_match = re.search(r'path="([^"]*)"', line, re.IGNORECASE)
-                                            if path_match:
-                                                path = path_match.group(1)
-                                            else:
-                                                # Scan the .SEC file for the path value
-                                                sec_file_path = file_path
-                                                with open(sec_file_path, 'r', encoding='utf-8') as sec_file:
-                                                    sec_content = sec_file.read()
-                                                    sec_path_match = re.search(r'path="([^"]*)"', sec_content, re.IGNORECASE)
-                                                    if sec_path_match:
-                                                        path = sec_path_match.group(1)
-                                            report.write(f"{file_path}, {path}, {line_num}, {line.strip()}\n")
+                                            report.write(f"{file_path}, {line_num}, {line.strip()}\n")
                                             found_any = True
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
 
 
-#NEW CODE END
+
 
 with tab1:
     st.header("Extract Permissions")
