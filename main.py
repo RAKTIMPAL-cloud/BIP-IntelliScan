@@ -136,13 +136,18 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
                                     lines = f.readlines()
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
-                                            report.write(f"{file_path}, {line_num}, {line.strip()}\n")
-                                            for path, permissions in permissions_matches:
+                                                    
+                                                # Adjusted to correctly capture permissions without '&#x9;' characters
+                                                permissions_matches = re.findall(
+                                                    r'<folderPermission>.*?<allow path="(.*?)".*?permissions="(.*?)".*?/>.*?</folderPermission>',
+                                                    policy_content, re.IGNORECASE | re.DOTALL
+                                                )
+                                                for path, permissions in permissions_matches:
                                                     # Clean up and format permissions
                                                     permissions_clean = " | ".join(
                                                         [perm.split('.')[-1].capitalize() for perm in re.split(r'[,\s;]+', permissions) if perm.strip() and "&#x9" not in perm]
                                                     )
-                                                    report.write(f"{file_path}, {role_display_name}, {path}, {permissions_clean}\n")
+                                                    report.write(f"{path}, {line_num}, {line.strip()}\n")
                                                     found_any = True
                                             
                                                    
