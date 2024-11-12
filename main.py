@@ -118,7 +118,7 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
 # Function to search keyword in XDMZ and SEC files
 def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
-        report.write("File Path, Line Number, Line\n")
+        report.write("Path, Line Number, Line\n")
         found_any = False
         for root, dirs, files in os.walk(folder):
             for file in files:
@@ -137,7 +137,15 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
                                             report.write(f"{file_path}, {line_num}, {line.strip()}\n")
-                                            found_any = True
+                                            for path, permissions in permissions_matches:
+                                                    # Clean up and format permissions
+                                                    permissions_clean = " | ".join(
+                                                        [perm.split('.')[-1].capitalize() for perm in re.split(r'[,\s;]+', permissions) if perm.strip() and "&#x9" not in perm]
+                                                    )
+                                                    report.write(f"{file_path}, {role_display_name}, {path}, {permissions_clean}\n")
+                                                    found_any = True
+                                            
+                                                   
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
