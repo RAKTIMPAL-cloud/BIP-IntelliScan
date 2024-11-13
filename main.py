@@ -171,13 +171,14 @@ with tab2:
     keyword_sql = st.text_input("Enter Keyword", key="keyword_sql")
     if st.button("Search", key="search_sql"):
         output_file = "keyword_search_report_sql.csv"
+        temp_dir = 'temp_dir'  # Define your temporary directory
         if uploaded_files_sql and keyword_sql:
             for uploaded_file in uploaded_files_sql:
                 xdrz_path = os.path.join(temp_dir, uploaded_file.name)
                 with open(xdrz_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
                 extract_xdrz(xdrz_path, temp_dir)
-                search_keyword_in_xdmz_and_sec(temp_dir, keyword_sql, output_file)
+                search_keyword_in_xdmz_and_sec(temp_dir, keyword_sql, output_file, uploaded_file.name)
             st.success("Search completed. Download the report:")
             st.download_button(label="Download CSV", data=open(output_file, "r").read(), file_name=output_file, mime="text/csv")
         else:
