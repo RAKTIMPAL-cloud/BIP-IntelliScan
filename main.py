@@ -131,7 +131,9 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, parent_folder):
                         for unzipped_file in unzipped_files:
                             if unzipped_file.endswith(".xdm") or unzipped_file.endswith(".sec"):
                                 file_path = os.path.join(dirpath, unzipped_file)
-                                adjusted_file_path = os.path.join(parent_folder.replace('.xdrz', ''), os.path.relpath(file_path, folder))  # Ensure correct parent folder name
+                                # Adjust the path to include the parent folder correctly
+                                relative_path = os.path.relpath(file_path, folder)
+                                adjusted_file_path = os.path.join(parent_folder.replace('.xdrz', ''), relative_path)
                                 with open(file_path, 'r', encoding='utf-8') as f:
                                     lines = f.readlines()
                                     for line_num, line in enumerate(lines, 1):
