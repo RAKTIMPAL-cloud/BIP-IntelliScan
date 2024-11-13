@@ -115,10 +115,12 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
             st.warning("No results found for the given keyword.")
     return output_file
 
+
+
 # Function to search keyword in XDMZ and SEC files
 def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
     with open(output_file, 'w', encoding='utf-8') as report:
-        report.write("File Path, Line Number, Line\n")
+        report.write("File Path, Path, Line Number, Line\n")
         found_any = False
         for root, dirs, files in os.walk(folder):
             for file in files:
@@ -132,17 +134,18 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
                         for unzipped_file in unzipped_files:
                             if unzipped_file.endswith(".xdm") or unzipped_file.endswith(".sec"):
                                 file_path = os.path.join(dirpath, unzipped_file)
+                                adjusted_file_path = file_path.replace('temp_dir', file.replace('.xdmz', ''))  # Replace temp_dir with .xdmz filename
                                 with open(file_path, 'r', encoding='utf-8') as f:
                                     lines = f.readlines()
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
-                                            report.write(f"{file_path}, {line_num}, {line.strip()}\n")
+                                            path_match = re.search(r'path="([^"]*)"', line, re.IGNORECASE)
+                                            path = path_match.group(1) if path_match else "N/A"
+                                            report.write(f"{adjusted_file_path}, {path}, {line_num}, {line.strip()}\n")
                                             found_any = True
         if not found_any:
             st.warning("No results found for the given keyword.")
     return output_file
-
-
 
 
 with tab1:
