@@ -118,15 +118,13 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
 
 
 # Function to search keyword in XDMZ and SEC files
-def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, uploaded_file_name):
-    with open(output_file, 'w', encoding='utf-8') as report:
-        report.write("File Path, Line Number, Line\n")
+def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, xdrz_name):
+    with open(output_file, 'a', encoding='utf-8') as report:
         found_any = False
         for root, dirs, files in os.walk(folder):
             for file in files:
                 if file.endswith(".xdmz"):
                     xdmz_file_path = os.path.join(root, file)
-                    file_base_name = os.path.splitext(uploaded_file_name)[0]  # Get the base name of the uploaded .xdrz file without extension
                     unzip_folder = os.path.join(root, file.replace(".xdmz", ""))
                     os.makedirs(unzip_folder, exist_ok=True)
                     with zipfile.ZipFile(xdmz_file_path, 'r') as zip_ref:
@@ -135,8 +133,7 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, uploaded_file_n
                         for unzipped_file in unzipped_files:
                             if unzipped_file.endswith(".xdm") or unzipped_file.endswith(".sec"):
                                 file_path = os.path.join(dirpath, unzipped_file)
-                                # Replace 'temp_dir' with .xdrz file base name
-                                adjusted_file_path = file_path.replace('temp_dir', file_base_name)
+                                adjusted_file_path = file_path.replace('temp_dir', os.path.splitext(xdrz_name)[0])  # Replace temp_dir with .xdrz file name
                                 with open(file_path, 'r', encoding='utf-8') as f:
                                     lines = f.readlines()
                                     for line_num, line in enumerate(lines, 1):
@@ -144,8 +141,8 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, uploaded_file_n
                                             report.write(f"{adjusted_file_path}, {line_num}, {line.strip()}\n")
                                             found_any = True
         if not found_any:
-            st.warning("No results found for the given keyword.")
-    return output_file
+            st.warning(f"No results found for the keyword '{keyword}' in file {xdrz_name}.")
+
 
 with tab1:
     st.header("Extract Permissions")
@@ -173,6 +170,8 @@ with tab2:
         output_file = "keyword_search_report_sql.csv"
         temp_dir = 'temp_dir'  # Define your temporary directory
         if uploaded_files_sql and keyword_sql:
+            with open(output_file, 'w', encoding='utf-8') as report:  # Initialize the report file
+                report.write("File Path, Line Number, Line\n")
             for uploaded_file in uploaded_files_sql:
                 xdrz_path = os.path.join(temp_dir, uploaded_file.name)
                 with open(xdrz_path, "wb") as f:
