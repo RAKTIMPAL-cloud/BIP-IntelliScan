@@ -131,7 +131,7 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, parent_folder):
                         for unzipped_file in unzipped_files:
                             if unzipped_file.endswith(".xdm") or unzipped_file.endswith(".sec"):
                                 file_path = os.path.join(dirpath, unzipped_file)
-                                adjusted_file_path = os.path.relpath(file_path, folder)
+                                adjusted_file_path = os.path.join(parent_folder.replace('.xdrz', ''), os.path.relpath(file_path, folder))  # Ensure correct parent folder name
                                 with open(file_path, 'r', encoding='utf-8') as f:
                                     lines = f.readlines()
                                     for line_num, line in enumerate(lines, 1):
@@ -139,8 +139,7 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, parent_folder):
                                             report.write(f"{parent_folder}, {adjusted_file_path}, {line_num}, {line.strip()}\n")
                                             found_any = True
         if not found_any:
-            st.warning("No results found for the given keyword.")
-    return output_file
+            st.warning(f"No results found for the given keyword '{keyword}' in file {parent_folder}.")
 
 with tab1:
     st.header("Extract Permissions")
