@@ -140,7 +140,7 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, xdrz_name):
                                     lines = f.readlines()
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
-                                            report.write(f"{adjusted_file_path}, {line_num}, {line.strip()}\n")
+                                            report.write(f"{adjusted_file_path.replace(os.pathsep, '/')}, {line_num}, {line.strip()}\n")
                                             found_any = True
         if not found_any:
             st.warning(f"No results found for the keyword '{keyword}' in file {xdrz_name}.")
@@ -184,6 +184,6 @@ with tab2:
             st.download_button(label="Download CSV", data=open(output_file, "r").read(), file_name=output_file, mime="text/csv")
         else:
             st.error("Please upload files and provide the keyword.")
-
+            
 # Clean up temp directory after the search
 shutil.rmtree(temp_dir, ignore_errors=True)
