@@ -133,9 +133,9 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, xdrz_name):
                         for unzipped_file in unzipped_files:
                             if unzipped_file.endswith(".xdm") or unzipped_file.endswith(".sec"):
                                 file_path = os.path.join(dirpath, unzipped_file)
-                                # Replace 'temp_dir' with base name of the .xdrz file
-                                adjusted_file_path = file_path.replace('temp_dir', os.path.splitext(xdrz_name)[0])
-                                adjusted_file_path = os.path.join(os.path.splitext(xdrz_name)[0], os.path.relpath(file_path, unzip_folder))  # Ensure path is correctly tied to .xdrz file
+                                # Ensure path is correctly tied to .xdrz file
+                                relative_path = os.path.relpath(file_path, unzip_folder)
+                                adjusted_file_path = os.path.join(os.path.splitext(xdrz_name)[0], relative_path)
                                 with open(file_path, 'r', encoding='utf-8') as f:
                                     lines = f.readlines()
                                     for line_num, line in enumerate(lines, 1):
