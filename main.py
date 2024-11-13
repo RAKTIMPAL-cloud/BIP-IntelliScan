@@ -115,11 +115,10 @@ def search_keyword_in_xdoz_and_sec(folder, keyword, output_file):
             st.warning("No results found for the given keyword.")
     return output_file
 
-
-
 # Function to search keyword in XDMZ and SEC files
-def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, xdrz_name):
-    with open(output_file, 'a', encoding='utf-8') as report:
+def search_keyword_in_xdmz_and_sec(folder, keyword, output_file):
+    with open(output_file, 'w', encoding='utf-8') as report:
+        report.write("File Path, Line Number, Line\n")
         found_any = False
         for root, dirs, files in os.walk(folder):
             for file in files:
@@ -133,18 +132,15 @@ def search_keyword_in_xdmz_and_sec(folder, keyword, output_file, xdrz_name):
                         for unzipped_file in unzipped_files:
                             if unzipped_file.endswith(".xdm") or unzipped_file.endswith(".sec"):
                                 file_path = os.path.join(dirpath, unzipped_file)
-                                # Ensure path is correctly tied to .xdrz file
-                                relative_path = os.path.relpath(file_path, unzip_folder)
-                                adjusted_file_path = os.path.join(os.path.splitext(xdrz_name)[0], relative_path)
                                 with open(file_path, 'r', encoding='utf-8') as f:
                                     lines = f.readlines()
                                     for line_num, line in enumerate(lines, 1):
                                         if re.search(keyword, line, re.IGNORECASE):
-                                            report.write(f"{adjusted_file_path.replace(os.pathsep, '/')}, {line_num}, {line.strip()}\n")
+                                            report.write(f"{file_path}, {line_num}, {line.strip()}\n")
                                             found_any = True
         if not found_any:
-            st.warning(f"No results found for the keyword '{keyword}' in file {xdrz_name}.")
-
+            st.warning("No results found for the given keyword.")
+    return output_file
 
 with tab1:
     st.header("Extract Permissions")
@@ -170,20 +166,17 @@ with tab2:
     keyword_sql = st.text_input("Enter Keyword", key="keyword_sql")
     if st.button("Search", key="search_sql"):
         output_file = "keyword_search_report_sql.csv"
-        temp_dir = 'temp_dir'  # Define your temporary directory
         if uploaded_files_sql and keyword_sql:
-            with open(output_file, 'w', encoding='utf-8') as report:  # Initialize the report file
-                report.write("File Path, Line Number, Line\n")
             for uploaded_file in uploaded_files_sql:
                 xdrz_path = os.path.join(temp_dir, uploaded_file.name)
                 with open(xdrz_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
                 extract_xdrz(xdrz_path, temp_dir)
-                search_keyword_in_xdmz_and_sec(temp_dir, keyword_sql, output_file, uploaded_file.name)
+                search_keyword_in_xdmz_and_sec(temp_dir, keyword_sql, output_file)
             st.success("Search completed. Download the report:")
             st.download_button(label="Download CSV", data=open(output_file, "r").read(), file_name=output_file, mime="text/csv")
         else:
             st.error("Please upload files and provide the keyword.")
-            
+
 # Clean up temp directory after the search
 shutil.rmtree(temp_dir, ignore_errors=True)
