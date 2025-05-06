@@ -68,7 +68,7 @@ st.markdown('<div class="custom-header">Oracle BIP Reports IntelliScan Tool</div
 
 # Add the hyperlink just below the title
 st.markdown("""
-<div style='font-size: 18px; margin-bottom: 20px;'>
+<div style='font-size: 20px; margin-bottom: 20px;'>
     🔗 For scanning custom objects (Lookups, Fast Formulas, Value Sets), 
     <a href='https://oracle-hcm-custom-objects-intelliscan.streamlit.app/' target='_blank' style='color: yellow; font-weight: bold; text-decoration: underline;'>
         click here
