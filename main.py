@@ -65,6 +65,17 @@ st.image(img)  # Display the resized image
 
 # Title and tabs
 st.markdown('<div class="custom-header">Oracle BIP Reports IntelliScan Tool</div>', unsafe_allow_html=True)
+
+# Add the hyperlink just below the title
+st.markdown("""
+<div style='font-size: 18px; margin-bottom: 20px;'>
+    🔗 For scanning custom objects (Lookups, Fast Formulas, Value Sets), 
+    <a href='https://oracle-hcm-custom-objects-intelliscan.streamlit.app/' target='_blank' style='color: yellow; font-weight: bold; text-decoration: underline;'>
+        click here
+    </a>
+</div>
+""", unsafe_allow_html=True)
+
 tab1, tab2 = st.tabs(["Extract Report's Permissions", "Keyword Finder in Data Model"])
 
 # Temp directory for extracted files
